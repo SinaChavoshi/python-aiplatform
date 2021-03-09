@@ -29,6 +29,7 @@ def predict_text_sentiment_analysis_mbsdk(project, location, endpoint_id, conten
     )
 
     for prediction_ in response.predictions:
-        print(f'Predictions:\n\n')
-        print(prediction_)
+        prediction = TextSentimentPredictionResult.from_map(prediction_)
+        print('Predictions:\n\n')
+        print(f'\tSentiment value: {prediction.sentiment}')
 #[END aiplatform_predict_text_sentiment_analysis_mbsdk_sample]
