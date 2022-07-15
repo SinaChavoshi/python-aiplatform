@@ -17,6 +17,7 @@
 
 import copy
 from typing import Optional, Dict
+from xml.etree.ElementPath import prepare_self
 
 from google.cloud.aiplatform.compat.types import artifact as gca_artifact
 from google.cloud.aiplatform.metadata.schema import base_artifact
@@ -243,16 +244,22 @@ class Metrics(base_artifact.BaseArtifactSchema):
         extended_metadata = copy.deepcopy(metadata) if metadata else {}
         if accuracy:
             extended_metadata["accuracy"] = accuracy
+            self.accuracy = accuracy
         if precision:
             extended_metadata["precision"] = precision
+            self.precision = precision
         if recall:
             extended_metadata["recall"] = recall
+            self.recall = recall
         if f1score:
             extended_metadata["f1score"] = f1score
+            self.f1score = f1score
         if mean_absolute_error:
             extended_metadata["mean_absolute_error"] = mean_absolute_error
+            self.mean_absolute_error = mean_absolute_error
         if mean_squared_error:
             extended_metadata["mean_squared_error"] = mean_squared_error
+            self.mean_squared_error = mean_squared_error
 
         super(Metrics, self).__init__(
             uri=uri,
