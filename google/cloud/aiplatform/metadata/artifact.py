@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-from typing import Optional, Dict, Union
+from typing import Optional, Dict, Union, List
 
 import proto
 
@@ -246,6 +246,58 @@ class Artifact(resource._Resource):
             filter=filter,
         )
         return client.list_artifacts(request=list_request)
+
+    @classmethod
+    def list_artifacts(
+        cls,
+        filter: Optional[str] = None,
+        metadata_store_id: str = "default",
+        project: Optional[str] = None,
+        location: Optional[str] = None,
+        credentials: Optional[auth_credentials.Credentials] = None,
+    ) -> List["Artifact"]:
+        """List Metadata Artifacts that match the list filter in target metadataStore.
+
+        Args:
+            filter (str):
+                Optional. A query to filter available resources for
+                matching results.
+            metadata_store_id (str):
+                The <metadata_store_id> portion of the resource name with
+                the format:
+                projects/123/locations/us-central1/metadataStores/<metadata_store_id>/<resource_noun>/<resource_id>
+                If not provided, the MetadataStore's ID will be set to "default".
+            project (str):
+                Project used to create this resource. Overrides project set in
+                aiplatform.init.
+            location (str):
+                Location used to create this resource. Overrides location set in
+                aiplatform.init.
+            credentials (auth_credentials.Credentials):
+                Custom credentials used to create this resource. Overrides
+                credentials set in aiplatform.init.
+
+        Returns:
+            resources (sequence[Artifact]):
+                a list of managed Metadata Artifacts.
+
+        """
+        api_client = None
+        if credentials & location:
+            api_client = cls._instantiate_client(
+                location=location, credentials=credentials
+            )
+
+        parent = utils.full_resource_name(
+            resource_name=metadata_store_id,
+            resource_noun=metadata_store._MetadataStore._resource_noun,
+            parse_resource_name_method=metadata_store._MetadataStore._parse_resource_name,
+            format_resource_name_method=metadata_store._MetadataStore._format_resource_name,
+            project=project,
+            location=location,
+        )
+        return cls._list(client=api_client, parent=parent, filter=filter)
+
 
     @classmethod
     def create(
